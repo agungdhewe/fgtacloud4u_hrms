@@ -1,5 +1,6 @@
 {
 	"title" : "HR Status",
+	"icon" : "icon-hrstatus-white.png",
 	"allowanonymous" : true,
 	"allowedgroups" : ["public"],
 	"apis" : {

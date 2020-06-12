@@ -1,5 +1,6 @@
 {
 	"title" : "HR Grade",
+	"icon" : "icon-grade-white.png",
 	"allowanonymous" : true,
 	"allowedgroups" : ["public"],
 	"apis" : {

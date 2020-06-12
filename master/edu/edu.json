@@ -1,5 +1,6 @@
 {
 	"title" : "Education",
+	"icon" : "icon-education-white.png",
 	"allowanonymous" : true,
 	"allowedgroups" : ["public"],
 	"apis" : {
