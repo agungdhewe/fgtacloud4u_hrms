@@ -55,7 +55,6 @@ class DataSave extends WebAPI {
 			// apabila ada tanggal, ubah ke format sql sbb:
 			// $obj->tanggal = (\DateTime::createFromFormat('d/m/Y',$obj->tanggal))->format('Y-m-d');
 			$obj->empl_dtjoin = (\DateTime::createFromFormat('d/m/Y',$obj->empl_dtjoin))->format('Y-m-d');			$obj->empl_dtexit = (\DateTime::createFromFormat('d/m/Y',$obj->empl_dtexit))->format('Y-m-d');			$obj->empl_birthdate = (\DateTime::createFromFormat('d/m/Y',$obj->empl_birthdate))->format('Y-m-d');
-			$obj->empl_id = strtoupper($obj->empl_id);
 			$obj->empl_nik = strtoupper($obj->empl_nik);
 			$obj->empl_name = strtoupper($obj->empl_name);
 			$obj->empl_birthplace = strtoupper($obj->empl_birthplace);

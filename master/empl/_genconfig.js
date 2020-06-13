@@ -21,7 +21,7 @@ module.exports = {
 				empl_dtexit: {text:'Exit Date', type: dbtype.date, null:true, suppresslist: true,},
 
 				empl_birthplace: {text:'Birth Place', type: dbtype.varchar(30), null:false, suppresslist: true, uppercase: true, options:{required:true,invalidMessage:'Tempat lahir harus diisi'}},
-				empl_birthdate: {text:'Join Date', type: dbtype.date, null:true, suppresslist: true, options:{required:true,invalidMessage:'Tanggal lahir harus diisi'}},
+				empl_birthdate: {text:'Birth Date', type: dbtype.date, null:true, suppresslist: true, options:{required:true,invalidMessage:'Tanggal lahir harus diisi'}},
 
 				empl_address: {text:'Address', type: dbtype.varchar(255), null:true, suppresslist: true, uppercase: true, options:{required:true,invalidMessage:'Alamat harus diisi'}},
 				empl_city: {text:'City', type: dbtype.varchar(20), null:true, suppresslist: true, uppercase: true, options:{required:true,invalidMessage:'Kota harus diisi'}},
