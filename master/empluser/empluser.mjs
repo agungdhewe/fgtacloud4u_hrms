@@ -5,11 +5,23 @@ import * as fgta4pageslider from '../../../../../index.php/asset/fgta/framework/
 import * as apis from './empluser.apis.mjs'
 import * as pList from './empluser-list.mjs'
 import * as pEdit from './empluser-edit.mjs'
+import * as pEditUnitgrid from './empluser-unitgrid.mjs'
+import * as pEditUnitform from './empluser-unitform.mjs'
+import * as pEditDeptgrid from './empluser-deptgrid.mjs'
+import * as pEditDeptform from './empluser-deptform.mjs'
+import * as pEditSitegrid from './empluser-sitegrid.mjs'
+import * as pEditSiteform from './empluser-siteform.mjs'
 
 
 
 const pnl_list = $('#pnl_list')
 const pnl_edit = $('#pnl_edit')
+const pnl_editunitgrid = $('#pnl_editunitgrid')
+const pnl_editunitform = $('#pnl_editunitform')
+const pnl_editdeptgrid = $('#pnl_editdeptgrid')
+const pnl_editdeptform = $('#pnl_editdeptform')
+const pnl_editsitegrid = $('#pnl_editsitegrid')
+const pnl_editsiteform = $('#pnl_editsiteform')
 
 
 
@@ -35,7 +47,12 @@ export async function init(opt) {
 		.initPages([
 			{panel: pnl_list, handler: pList},
 			{panel: pnl_edit, handler: pEdit},
-			
+			{panel: pnl_editunitgrid, handler: pEditUnitgrid},
+			{panel: pnl_editunitform, handler: pEditUnitform},
+			{panel: pnl_editdeptgrid, handler: pEditDeptgrid},
+			{panel: pnl_editdeptform, handler: pEditDeptform},
+			{panel: pnl_editsitegrid, handler: pEditSitegrid},
+			{panel: pnl_editsiteform, handler: pEditSiteform}			
 		], opt)
 
 	$ui.setPages(pages)

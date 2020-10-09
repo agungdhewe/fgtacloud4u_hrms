@@ -11,5 +11,8 @@ kemdian, di program bisa diakses dengan
 */
 
 export const load_user_id = 'fgta/framework/fguser/list'
+export const load_unit_id = 'ent/organisation/unit/list'
+export const load_dept_id = 'ent/organisation/dept/list'
+export const load_site_id = 'ent/location/site/list'
 
 

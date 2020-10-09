@@ -1,5 +1,5 @@
 {
-	"title" : "Employee User",
+	"title" : "Employee",
 	"variance" : {},
 	"allowanonymous" : true,
 	"allowedgroups" : ["public"],

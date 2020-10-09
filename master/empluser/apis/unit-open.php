@@ -26,38 +26,22 @@ class DataOpen extends WebAPI {
 	}
 	
 	public function execute($options) {
-
 		$userdata = $this->auth->session_get_user();
-
+		
 		try {
-
-			// cek apakah user boleh mengeksekusi API ini
-			if (!$this->RequestIsAllowedFor($this->reqinfo, "open", $userdata->groups)) {
-				throw new \Exception('your group authority is not allowed to do this action.');
-			}
-
 			$result = new \stdClass; 
 			
 			$where = \FGTA4\utils\SqlUtility::BuildCriteria(
 				$options->criteria,
 				[
-					"empl_id" => " A.empl_id = :empl_id "
+					"emplunit_id" => " emplunit_id = :emplunit_id "
 				]
 			);
 
-			// $sql = \FGTA4\utils\SqlUtility::Select('mst_empluser', [
-			// 	'empl_id', 'empl_nik', 'empl_name', 'dept_name', 'site_name', 'user_id', '_createby', '_createdate', '_modifyby', '_modifydate' 
-			// ], $where->sql);
-			$sql = "
-				select 
-				A.empl_id, A.empl_nik, A.empl_name, C.dept_name, D.site_name, B.user_id, B._createby, B._createdate, B._modifyby, B._modifydate 
-				from mst_empl A left join mst_empluser B on B.empl_id=A.empl_id
-								left join mst_dept C on C.dept_id = A.dept_id
-								left join mst_site D on D.site_id = A.site_id			
-			
-			" . $where->sql;	
+			$sql = \FGTA4\utils\SqlUtility::Select('mst_emplunit', [
+				'emplunit_id', 'unit_id', 'empl_id', '_createby', '_createdate', '_modifyby', '_modifydate' 
+			], $where->sql);
 
-			
 			$stmt = $this->db->prepare($sql);
 			$stmt->execute($where->params);
 			$row  = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -68,17 +52,16 @@ class DataOpen extends WebAPI {
 			}
 
 			$result->record = array_merge($record, [
-				
+					
 				// // jikalau ingin menambah atau edit field di result record, dapat dilakukan sesuai contoh sbb: 
 				// 'tambahan' => 'dta',
 				//'tanggal' => date("d/m/Y", strtotime($record['tanggal'])),
 				//'gendername' => $record['gender']
-				
-				'user_name' => \FGTA4\utils\SqlUtility::Lookup($record['user_id'], $this->db, 'fgt_user', 'user_id', 'user_name'),
 
+				'unit_name' => \FGTA4\utils\SqlUtility::Lookup($record['unit_id'], $this->db, 'mst_unit', 'unit_id', 'unit_name'),
+				
 				'_createby_username' => \FGTA4\utils\SqlUtility::Lookup($record['_createby'], $this->db, $GLOBALS['MAIN_USERTABLE'], 'user_id', 'user_fullname'),
 				'_modifyby_username' => \FGTA4\utils\SqlUtility::Lookup($record['_modifyby'], $this->db, $GLOBALS['MAIN_USERTABLE'], 'user_id', 'user_fullname'),
-
 			]);
 
 			// $date = DateTime::createFromFormat('d/m/Y', "24/04/2012");

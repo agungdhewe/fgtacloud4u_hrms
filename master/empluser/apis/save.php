@@ -87,12 +87,25 @@ class DataSave extends WebAPI {
 				// 	$cmd = \FGTA4\utils\SqlUtility::CreateSQLUpdate($tablename, $obj, $key);
 				// }
 	
-				$sql = "INSERT INTO mst_empluser VALUES (:empl_id, :user_id) ON DUPLICATE KEY UPDATE user_id = :user_id ";	
+				$sql = "
+					INSERT INTO mst_empluser 
+					(empl_id, user_id, _createby, _createdate) 
+					VALUES (:empl_id, :user_id, :_createby, :_createdate) 
+					ON DUPLICATE KEY 
+						UPDATE 
+						user_id = :user_id,
+						_modifyby = :_modifyby,
+						_modifydate = :_modifydate 
+				";	
 
 				$stmt = $this->db->prepare($sql);
 				$stmt->execute([
 					':empl_id' => $obj->empl_id,
-					':user_id' => $obj->user_id
+					':user_id' => $obj->user_id,
+					':_createby' =>  $userdata->username,
+					':_createdate' => date("Y-m-d H:i:s"),
+					':_modifyby' =>  $userdata->username,
+					':_modifydate' => date("Y-m-d H:i:s")					
 				]);
 
 				\FGTA4\utils\SqlUtility::WriteLog($this->db, $this->reqinfo->modulefullname, $tablename, $obj->{$primarykey}, $action, $userdata->username, (object)[]);
