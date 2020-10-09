@@ -1,10 +1,10 @@
 <div id="pnl_list">
-	<div class="fgta-page-title">Daftar HR Grade</div>
+	<div class="fgta-page-title">Daftar Employee User</div>
 
 	<div id="pnl_list-pnl_head" style="display: flex; align-items: flex-end">
 		<!-- Simple Query -->
 		<div class="list-buttonbaru" style="text-align: right; width: calc(100% - 10px); float: right;  position: absolute">
-			<a href="javascript:void(0)" id="pnl_list-btn_new" class="easyui-linkbutton c8" style="width: 60px">Baru</a>
+			<!-- <a href="javascript:void(0)" id="pnl_list-btn_new" class="easyui-linkbutton c8" style="width: 60px">Baru</a> -->
 		</div>
 		<div class="list-search-wrap" style="width: calc(100% - 65px); display: flex;">
 			<div class="list-search-item" style="width: 50px;">Cari</div>
@@ -22,13 +22,15 @@
 		<table id="pnl_list-tbl_list" paging="true" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th mapping="hrgrd_id">hrgrd_id</th>
-					<th mapping="hrgrd_name">hrgrd_name</th>
+					<th mapping="empl_id">empl_id</th>
+					<th mapping="empl_name">empl_name</th>
+					<th mapping="dept_name">dept_name</th>
 
 				</tr>
 				<tr style="background-color: #cccccc; height: 30px">
 					<td class="fgtable-head" style="width: 100px; border-bottom: 1px solid #000000">ID</td>
-					<td class="fgtable-head" style="border-bottom: 1px solid #000000">Grade Name</td>
+					<td class="fgtable-head" style="width: 100px; border-bottom: 1px solid #000000">Name</td>
+					<td class="fgtable-head" style="width: 100px; border-bottom: 1px solid #000000">Dept Name</td>
 
 				</tr>
 			</thead>

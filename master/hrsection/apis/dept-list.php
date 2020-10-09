@@ -26,21 +26,14 @@ class DataList extends WebAPI {
 	}
 
 	public function execute($options) {
-
 		$userdata = $this->auth->session_get_user();
-
-		try {
 		
-			// cek apakah user boleh mengeksekusi API ini
-			if (!$this->RequestIsAllowedFor($this->reqinfo, "list", $userdata->groups)) {
-				throw new \Exception('your group authority is not allowed to do this action.');
-			}
-
+		try {
 
 			$where = \FGTA4\utils\SqlUtility::BuildCriteria(
 				$options->criteria,
 				[
-					"search" => " A.hrgrd_id LIKE CONCAT('%', :search, '%') OR A.hrgrd_name LIKE CONCAT('%', :search, '%') "
+					"id" => " A.hrsection_id = :id"
 				]
 			);
 
@@ -48,21 +41,21 @@ class DataList extends WebAPI {
 			$maxrow = 30;
 			$offset = (property_exists($options, 'offset')) ? $options->offset : 0;
 
-			$stmt = $this->db->prepare("select count(*) as n from mst_hrgrd A" . $where->sql);
+			$stmt = $this->db->prepare("select count(*) as n from mst_hrdeptsection A" . $where->sql);
 			$stmt->execute($where->params);
 			$row  = $stmt->fetch(\PDO::FETCH_ASSOC);
 			$total = (float) $row['n'];
 
+
+			// agar semua baris muncul
+			// $maxrow = $total;
+
 			$limit = " LIMIT $maxrow OFFSET $offset ";
 			$stmt = $this->db->prepare("
 				select 
-				hrgrd_id, hrgrd_name, hrgrd_group, hrgrd_descr, hrgrd_order, _createby, _createdate, _modifyby, _modifydate 
-				from mst_hrgrd A
-			" . $where->sql 
-			  . " order by hrgrd_order"
-			  . $limit  
-			);
-			
+				hrdeptsection_id, dept_id, auth_id, hrsection_id, _createby, _createdate, _modifyby, _modifydate 
+				from mst_hrdeptsection A
+			" . $where->sql . $limit);
 			$stmt->execute($where->params);
 			$rows  = $stmt->fetchall(\PDO::FETCH_ASSOC);
 
@@ -77,6 +70,9 @@ class DataList extends WebAPI {
 					// // jikalau ingin menambah atau edit field di result record, dapat dilakukan sesuai contoh sbb: 
 					//'tanggal' => date("d/m/y", strtotime($record['tanggal'])),
 				 	//'tambahan' => 'dta'
+
+					'dept_name' => \FGTA4\utils\SqlUtility::Lookup($record['dept_id'], $this->db, 'mst_dept', 'dept_id', 'dept_name'),
+					'auth_name' => \FGTA4\utils\SqlUtility::Lookup($record['auth_id'], $this->db, 'mst_auth', 'auth_id', 'auth_name'),
 					 
 				]));
 			}

@@ -11,5 +11,7 @@ kemdian, di program bisa diakses dengan
 */
 
 export const load_deptmodel_id = 'ent/organisation/deptmodel/list'
+export const load_dept_id = 'ent/organisation/dept/list'
+export const load_auth_id = 'ent/organisation/auth/list'
 
 

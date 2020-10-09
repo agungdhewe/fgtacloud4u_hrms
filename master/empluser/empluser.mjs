@@ -2,18 +2,14 @@ import {fgta4grid} from  '../../../../../index.php/asset/fgta/framework/fgta4lib
 import {fgta4form} from  '../../../../../index.php/asset/fgta/framework/fgta4libs/fgta4form.mjs'
 import * as fgta4pages from '../../../../../index.php/asset/fgta/framework/fgta4libs/fgta4pages.mjs'
 import * as fgta4pageslider from '../../../../../index.php/asset/fgta/framework/fgta4libs/fgta4pageslider.mjs'
-import * as apis from './hrsection.apis.mjs'
-import * as pList from './hrsection-list.mjs'
-import * as pEdit from './hrsection-edit.mjs'
-import * as pEditDeptgrid from './hrsection-deptgrid.mjs'
-import * as pEditDeptform from './hrsection-deptform.mjs'
+import * as apis from './empluser.apis.mjs'
+import * as pList from './empluser-list.mjs'
+import * as pEdit from './empluser-edit.mjs'
 
 
 
 const pnl_list = $('#pnl_list')
 const pnl_edit = $('#pnl_edit')
-const pnl_editdeptgrid = $('#pnl_editdeptgrid')
-const pnl_editdeptform = $('#pnl_editdeptform')
 
 
 
@@ -39,8 +35,7 @@ export async function init(opt) {
 		.initPages([
 			{panel: pnl_list, handler: pList},
 			{panel: pnl_edit, handler: pEdit},
-			{panel: pnl_editdeptgrid, handler: pEditDeptgrid},
-			{panel: pnl_editdeptform, handler: pEditDeptform}			
+			
 		], opt)
 
 	$ui.setPages(pages)

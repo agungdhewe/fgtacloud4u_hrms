@@ -40,7 +40,7 @@ class DataList extends WebAPI {
 			$where = \FGTA4\utils\SqlUtility::BuildCriteria(
 				$options->criteria,
 				[
-					"search" => " A.hrgrd_id LIKE CONCAT('%', :search, '%') OR A.hrgrd_name LIKE CONCAT('%', :search, '%') "
+					"search" => " A.empl_id LIKE CONCAT('%', :search, '%') OR A.empl_nik LIKE CONCAT('%', :search, '%') OR A.empl_name LIKE CONCAT('%', :search, '%') OR E.user_name LIKE CONCAT('%', :search, '%') "
 				]
 			);
 
@@ -48,7 +48,7 @@ class DataList extends WebAPI {
 			$maxrow = 30;
 			$offset = (property_exists($options, 'offset')) ? $options->offset : 0;
 
-			$stmt = $this->db->prepare("select count(*) as n from mst_hrgrd A" . $where->sql);
+			$stmt = $this->db->prepare("select count(*) as n from mst_empl A left join mst_empluser B on B.empl_id=A.empl_id left join fgt_user E on E.user_id = B.user_id" . $where->sql);
 			$stmt->execute($where->params);
 			$row  = $stmt->fetch(\PDO::FETCH_ASSOC);
 			$total = (float) $row['n'];
@@ -56,13 +56,12 @@ class DataList extends WebAPI {
 			$limit = " LIMIT $maxrow OFFSET $offset ";
 			$stmt = $this->db->prepare("
 				select 
-				hrgrd_id, hrgrd_name, hrgrd_group, hrgrd_descr, hrgrd_order, _createby, _createdate, _modifyby, _modifydate 
-				from mst_hrgrd A
-			" . $where->sql 
-			  . " order by hrgrd_order"
-			  . $limit  
-			);
-			
+				A.empl_id, A.empl_nik, A.empl_name, C.dept_name, D.site_name, B.user_id, A._createby, A._createdate, A._modifyby, A._modifydate 
+				from mst_empl A left join mst_empluser B on B.empl_id=A.empl_id
+								left join mst_dept C on C.dept_id = A.dept_id
+								left join mst_site D on D.site_id = A.site_id
+								left join fgt_user E on E.user_id = B.user_id
+			" . $where->sql . $limit);
 			$stmt->execute($where->params);
 			$rows  = $stmt->fetchall(\PDO::FETCH_ASSOC);
 
@@ -77,6 +76,7 @@ class DataList extends WebAPI {
 					// // jikalau ingin menambah atau edit field di result record, dapat dilakukan sesuai contoh sbb: 
 					//'tanggal' => date("d/m/y", strtotime($record['tanggal'])),
 				 	//'tambahan' => 'dta'
+					'user_name' => \FGTA4\utils\SqlUtility::Lookup($record['user_id'], $this->db, 'fgt_user', 'user_id', 'user_name'),
 					 
 				]));
 			}

@@ -16,7 +16,7 @@ module.exports = {
 			data: {
 
 				hrjob_id: {text:'ID', type: dbtype.varchar(20), null:false, uppercase: true, options:{required:true,invalidMessage:'ID harus diisi'}},
-				hrjob_name: {text:'Section', type: dbtype.varchar(60), null:false, uppercase: true, options:{required:true,invalidMessage:'Nama Job harus diisi'}},
+				hrjob_name: {text:'Job Name', type: dbtype.varchar(60), null:false, uppercase: true, options:{required:true,invalidMessage:'Nama Job harus diisi'}},
 				hrjob_descr: {text:'Descr', type: dbtype.varchar(90), null:true, suppresslist: true},
 				hrjob_isdisabled: {text:'Disabled', type: dbtype.boolean, null:false, default:'0'},
 	

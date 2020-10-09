@@ -1,5 +1,5 @@
 {
-	"title" : "HR Section",
+	"title" : "Employee User",
 	"variance" : {},
 	"allowanonymous" : true,
 	"allowedgroups" : ["public"],

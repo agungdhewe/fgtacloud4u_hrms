@@ -9,11 +9,12 @@ const btn_delete = $('#pnl_edit-btn_delete')
 
 const pnl_form = $('#pnl_edit-form')
 const obj = {
-	txt_hrsection_id: $('#pnl_edit-txt_hrsection_id'),
-	txt_hrsection_name: $('#pnl_edit-txt_hrsection_name'),
-	txt_hrsection_descr: $('#pnl_edit-txt_hrsection_descr'),
-	chk_hrsection_isdisabled: $('#pnl_edit-chk_hrsection_isdisabled'),
-	cbo_deptmodel_id: $('#pnl_edit-cbo_deptmodel_id')
+	txt_empl_id: $('#pnl_edit-txt_empl_id'),
+	txt_empl_nik: $('#pnl_edit-txt_empl_nik'),
+	txt_empl_name: $('#pnl_edit-txt_empl_name'),
+	txt_dept_name: $('#pnl_edit-txt_dept_name'),
+	txt_site_name: $('#pnl_edit-txt_site_name'),
+	cbo_user_id: $('#pnl_edit-cbo_user_id')
 }
 
 
@@ -27,16 +28,18 @@ export async function init(opt) {
 	var disableedit = false;
 	// switch (this_page_options.variancename) {
 	// 	case 'commit' :
-	//		btn_edit.linkbutton('disable');
 	//		disableedit = true;
+	//		btn_edit.linkbutton('disable');
+	//		btn_save.linkbutton('disable');
+	//		btn_delete.linkbutton('disable');
 	//		break;
 	// }
 
 
 	form = new global.fgta4form(pnl_form, {
-		primary: obj.txt_hrsection_id,
-		autoid: false,
-		logview: 'mst_hrsection',
+		primary: obj.txt_empl_id,
+		autoid: true,
+		logview: 'mst_empluser',
 		btn_edit: disableedit==true? $('<a>edit</a>') : btn_edit,
 		btn_save: disableedit==true? $('<a>save</a>') : btn_save,
 		btn_delete: disableedit==true? $('<a>delete</a>') : btn_delete,		
@@ -52,16 +55,16 @@ export async function init(opt) {
 
 
 
-	new fgta4slideselect(obj.cbo_deptmodel_id, {
-		title: 'Pilih deptmodel_id',
+	new fgta4slideselect(obj.cbo_user_id, {
+		title: 'Pilih user_id',
 		returnpage: this_page_id,
-		api: $ui.apis.load_deptmodel_id,
-		fieldValue: 'deptmodel_id',
-		fieldValueMap: 'deptmodel_id',
-		fieldDisplay: 'deptmodel_name',
+		api: $ui.apis.load_user_id,
+		fieldValue: 'user_id',
+		fieldValueMap: 'user_id',
+		fieldDisplay: 'user_name',
 		fields: [
-			{mapping: 'deptmodel_id', text: 'deptmodel_id'},
-			{mapping: 'deptmodel_name', text: 'deptmodel_name'},
+			{mapping: 'user_id', text: 'user_id'},
+			{mapping: 'user_name', text: 'user_name'},
 		],
 		OnDataLoading: (criteria) => {},
 		OnDataLoaded : (result, options) => {
@@ -142,7 +145,7 @@ export function open(data, rowid, viewmode=true, fn_callback) {
 
 		form
 			.fill(result.record)
-			.setValue(obj.cbo_deptmodel_id, result.record.deptmodel_id, result.record.deptmodel_name)
+			.setValue(obj.cbo_user_id, result.record.user_id, result.record.user_name)
 			.commit()
 			.setViewMode(viewmode)
 			.lock(false)
@@ -183,8 +186,8 @@ export function createnew() {
 
 		// set nilai-nilai default untuk form
 
-			data.deptmodel_id = '0'
-			data.deptmodel_name = '-- PILIH --'
+			data.user_id = '0'
+			data.user_name = '-- PILIH --'
 
 
 
@@ -192,7 +195,6 @@ export function createnew() {
 			$ui.getPages().show('pnl_list')
 		}
 
-		$ui.getPages().ITEMS['pnl_editdeptgrid'].handler.createnew(data, options)
 
 
 	})
@@ -220,7 +222,7 @@ function form_viewmodechanged(viewmode) {
 }
 
 function form_idsetup(options) {
-	var objid = obj.txt_hrsection_id
+	var objid = obj.txt_empl_id
 	switch (options.action) {
 		case 'fill' :
 			objid.textbox('disable') 

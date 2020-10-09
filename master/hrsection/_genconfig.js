@@ -50,12 +50,44 @@ module.exports = {
 
 
 		},
+
+		'mst_hrdeptsection' : {
+			primarykeys: ['hrdeptsection_id'],
+			comment: 'Relasi dari mst_hrsection ke mst_dept',
+			data: {
+				hrdeptsection_id: {text:'ID', type: dbtype.varchar(14), null:false},
+				dept_id: {
+					text:'Dept', type: dbtype.varchar(30), null:false, uppercase: true, suppresslist: true,
+					options:{required:true,invalidMessage:'Dept harus diisi', prompt:'-- PILIH --'},
+					comp: comp.Combo({
+						table: 'mst_dept', 
+						field_value: 'dept_id', field_display: 'dept_name', 
+						api: 'ent/organisation/dept/list'})				
+				},				
+				auth_id: {
+					text:'Authorisasi', type: dbtype.varchar(10), null:false, uppercase: true, suppresslist: true,
+					options:{required:true,invalidMessage:'Authorisasi harus diisi', prompt:'-- PILIH --'},
+					comp: comp.Combo({
+						table: 'mst_auth', 
+						field_value: 'auth_id', field_display: 'auth_name', 
+						api: 'ent/organisation/auth/list'})				
+				},				
+				hrsection_id: {text:'Section', type: dbtype.varchar(10), null:false},
+			},
+
+			uniques: {
+				'hrdeptsection_id' : ['dept_id', 'hrsection_id']
+			}		
+		
+		}
 	},
 
 	schema: {
 		title: 'HR Section',
 		header: 'mst_hrsection',
-		detils: {}
+		detils: {
+			'dept' : {title: 'Dept', table:'mst_hrdeptsection', form: true, headerview:'hrsection_name'},
+		}
 	}
 }
 

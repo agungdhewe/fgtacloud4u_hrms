@@ -30,3 +30,30 @@ INSERT INTO mst_hrsection (`hrsection_id`, `hrsection_name`, `deptmodel_id`, `_c
 
 
 
+CREATE TABLE `mst_hrdeptsection` (
+	`hrdeptsection_id` varchar(14) NOT NULL , 
+	`dept_id` varchar(30) NOT NULL , 
+	`auth_id` varchar(10) NOT NULL , 
+	`hrsection_id` varchar(10) NOT NULL , 
+	`_createby` varchar(13) NOT NULL , 
+	`_createdate` datetime NOT NULL DEFAULT current_timestamp(), 
+	`_modifyby` varchar(13)  , 
+	`_modifydate` datetime  , 
+	UNIQUE KEY `hrdeptsection_id` (`dept_id`, `hrsection_id`),
+	PRIMARY KEY (`hrdeptsection_id`)
+) 
+ENGINE=InnoDB
+COMMENT='Relasi dari mst_hrsection ke mst_dept';
+
+ALTER TABLE `mst_hrdeptsection` ADD KEY `dept_id` (`dept_id`);
+ALTER TABLE `mst_hrdeptsection` ADD KEY `auth_id` (`auth_id`);
+ALTER TABLE `mst_hrdeptsection` ADD KEY `hrsection_id` (`hrsection_id`);
+
+ALTER TABLE `mst_hrdeptsection` ADD CONSTRAINT `fk_mst_hrdeptsection_mst_dept` FOREIGN KEY (`dept_id`) REFERENCES `mst_dept` (`dept_id`);
+ALTER TABLE `mst_hrdeptsection` ADD CONSTRAINT `fk_mst_hrdeptsection_mst_auth` FOREIGN KEY (`auth_id`) REFERENCES `mst_auth` (`auth_id`);
+ALTER TABLE `mst_hrdeptsection` ADD CONSTRAINT `fk_mst_hrdeptsection_mst_hrsection` FOREIGN KEY (`hrsection_id`) REFERENCES `mst_hrsection` (`hrsection_id`);
+
+
+
+
+

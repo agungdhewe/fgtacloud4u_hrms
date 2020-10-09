@@ -26,8 +26,8 @@ class DataSave extends WebAPI {
 	}
 	
 	public function execute($data, $options) {
-		$tablename = 'mst_hrsection';
-		$primarykey = 'hrsection_id';
+		$tablename = 'mst_empluser';
+		$primarykey = 'empl_id';
 		$autoid = $options->autoid;
 		$datastate = $data->_state;
 
@@ -55,12 +55,13 @@ class DataSave extends WebAPI {
 			// apabila ada tanggal, ubah ke format sql sbb:
 			// $obj->tanggal = (\DateTime::createFromFormat('d/m/Y',$obj->tanggal))->format('Y-m-d');
 
-			$obj->hrsection_id = strtoupper($obj->hrsection_id);
-			$obj->hrsection_name = strtoupper($obj->hrsection_name);
-			$obj->deptmodel_id = strtoupper($obj->deptmodel_id);
+			// $obj->empl_id = strtoupper($obj->empl_id);
+			// $obj->empl_nik = strtoupper($obj->empl_nik);
+			// $obj->empl_name = strtoupper($obj->empl_name);
+			// $obj->dept_name = strtoupper($obj->dept_name);
+			// $obj->site_name = strtoupper($obj->site_name);
 
 
-			// if ($obj->hrsection_descr=='--NULL--') { unset($obj->hrsection_descr); }
 
 
 
@@ -69,24 +70,30 @@ class DataSave extends WebAPI {
 
 			try {
 
-				$action = '';
-				if ($datastate=='NEW') {
-					$action = 'NEW';
-					if ($autoid) {
-						$obj->{$primarykey} = $this->NewId([]);
-					}
-					$obj->_createby = $userdata->username;
-					$obj->_createdate = date("Y-m-d H:i:s");
-					$cmd = \FGTA4\utils\SqlUtility::CreateSQLInsert($tablename, $obj);
-				} else {
-					$action = 'MODIFY';
-					$obj->_modifyby = $userdata->username;
-					$obj->_modifydate = date("Y-m-d H:i:s");				
-					$cmd = \FGTA4\utils\SqlUtility::CreateSQLUpdate($tablename, $obj, $key);
-				}
+				$action = 'assign user _id';
+				// if ($datastate=='NEW') {
+				// 	$action = 'NEW';
+				// 	if ($autoid) {
+				// 		$obj->{$primarykey} = $this->NewId([]);
+				// 	}
+				// 	$obj->_createby = $userdata->username;
+				// 	$obj->_createdate = date("Y-m-d H:i:s");
+				// 	$cmd = \FGTA4\utils\SqlUtility::CreateSQLInsert($tablename, $obj);
+
+				// } else {
+				// 	$action = 'MODIFY';
+				// 	$obj->_modifyby = $userdata->username;
+				// 	$obj->_modifydate = date("Y-m-d H:i:s");				
+				// 	$cmd = \FGTA4\utils\SqlUtility::CreateSQLUpdate($tablename, $obj, $key);
+				// }
 	
-				$stmt = $this->db->prepare($cmd->sql);
-				$stmt->execute($cmd->params);
+				$sql = "INSERT INTO mst_empluser VALUES (:empl_id, :user_id) ON DUPLICATE KEY UPDATE user_id = :user_id ";	
+
+				$stmt = $this->db->prepare($sql);
+				$stmt->execute([
+					':empl_id' => $obj->empl_id,
+					':user_id' => $obj->user_id
+				]);
 
 				\FGTA4\utils\SqlUtility::WriteLog($this->db, $this->reqinfo->modulefullname, $tablename, $obj->{$primarykey}, $action, $userdata->username, (object)[]);
 
@@ -99,12 +106,23 @@ class DataSave extends WebAPI {
 			}
 
 
-			$where = \FGTA4\utils\SqlUtility::BuildCriteria((object)[$primarykey=>$obj->{$primarykey}], [$primarykey=>"$primarykey=:$primarykey"]);
-			$sql = \FGTA4\utils\SqlUtility::Select($tablename , [
-				$primarykey, 'hrsection_id', 'hrsection_name', 'hrsection_descr', 'hrsection_isdisabled', 'deptmodel_id', '_createby', '_createdate', '_modifyby', '_modifydate', '_createby', '_createdate', '_modifyby', '_modifydate'
-			], $where->sql);
+			// $where = \FGTA4\utils\SqlUtility::BuildCriteria((object)[$primarykey=>$obj->{$primarykey}], [$primarykey=>"$primarykey=:$primarykey"]);
+			// $sql = \FGTA4\utils\SqlUtility::Select($tablename , [
+			// 	$primarykey, 'empl_id', 'empl_nik', 'empl_name', 'dept_name', 'site_name', 'user_id', '_createby', '_createdate', '_modifyby', '_modifydate', '_createby', '_createdate', '_modifyby', '_modifydate'
+			// ], $where->sql);
+
+			$sql = "
+				select 
+				A.empl_id, A.empl_nik, A.empl_name, C.dept_name, D.site_name, B.user_id, A._createby, A._createdate, A._modifyby, A._modifydate 
+				from mst_empl A left join mst_empluser B on B.empl_id=A.empl_id
+								left join mst_dept C on C.dept_id = A.dept_id
+								left join mst_site D on D.site_id = A.site_id			
+				where
+				A.empl_id = :empl_id
+			"; 
+
 			$stmt = $this->db->prepare($sql);
-			$stmt->execute($where->params);
+			$stmt->execute([':empl_id' => $obj->empl_id]);
 			$row  = $stmt->fetch(\PDO::FETCH_ASSOC);			
 
 			$dataresponse = [];
@@ -113,7 +131,7 @@ class DataSave extends WebAPI {
 			}
 			$result->dataresponse = (object) array_merge($dataresponse, [
 				//  untuk lookup atau modify response ditaruh disini
-				'deptmodel_name' => \FGTA4\utils\SqlUtility::Lookup($data->deptmodel_id, $this->db, 'mst_deptmodel', 'deptmodel_id', 'deptmodel_name'),
+				'user_name' => \FGTA4\utils\SqlUtility::Lookup($data->user_id, $this->db, 'fgt_user', 'user_id', 'user_name'),
 				
 			]);
 

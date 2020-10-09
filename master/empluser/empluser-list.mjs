@@ -5,7 +5,7 @@ const tbl_list = $('#pnl_list-tbl_list')
 
 const txt_search = $('#pnl_list-txt_search')
 const btn_load = $('#pnl_list-btn_load')
-const btn_new = $('#pnl_list-btn_new')
+// const btn_new = $('#pnl_list-btn_new')
 
 
 let grd_list = {}
@@ -37,9 +37,9 @@ export async function init(opt) {
 		onClick: () => { btn_load_click() }
 	})
 
-	btn_new.linkbutton({
-		onClick: () => { btn_new_click() }
-	})
+	// btn_new.linkbutton({
+	// 	onClick: () => { btn_new_click() }
+	// })
 
 	document.addEventListener('OnSizeRecalculated', (ev) => {
 		OnSizeRecalculated(ev.detail.width, ev.detail.height)
