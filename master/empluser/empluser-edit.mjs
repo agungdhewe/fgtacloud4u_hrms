@@ -14,8 +14,11 @@ const obj = {
 	txt_empl_name: $('#pnl_edit-txt_empl_name'),
 	txt_dept_name: $('#pnl_edit-txt_dept_name'),
 	txt_site_name: $('#pnl_edit-txt_site_name'),
-	cbo_user_id: $('#pnl_edit-cbo_user_id')
+	cbo_user_id: $('#pnl_edit-cbo_user_id'),
 }
+
+const rec_postby = $('#pnl_edit_record-postby');
+const rec_postdate = $('#pnl_edit_record-postdate');
 
 
 let form = {}
@@ -50,7 +53,11 @@ export async function init(opt) {
 		OnDataDeleting: async (data, options) => { await form_deleting(data, options) },
 		OnDataDeleted: async (result, options) => { await form_deleted(result, options) },
 		OnIdSetup : (options) => { form_idsetup(options) },
-		OnViewModeChanged : (viewonly) => { form_viewmodechanged(viewonly) }
+		OnViewModeChanged : (viewonly) => { form_viewmodechanged(viewonly) },
+		OnCreateRecordStatusCreated: () => { 
+			$("#pnl_edit_record_custom").detach().appendTo("#pnl_edit_record");
+			$("#pnl_edit_record_custom").show();
+		}
 	})
 
 
@@ -121,7 +128,23 @@ export async function init(opt) {
 		}
 	})
 
+	// pnl_edit_record_custom
+	/*
+	// tambah info record
+	var postby = `
+	<div class="form_row">
+		<div class="form_label_col">Create By</div>
+		<div class="form_input_col" style="border: 0px solid black">
+			<span id="pnl_edit_record-postby"></span>
+		</div>
+	</div>	
+	`
 
+
+	var el = document.getElementById('pnl_edit_record_custom');
+	el.innerHTML = postby;
+	console.log('add');	
+	*/
 
 }
 
@@ -141,6 +164,9 @@ export function open(data, rowid, viewmode=true, fn_callback) {
 
 	var fn_dataopened = async (result, options) => {
 
+
+		rec_postby.html('-');
+		rec_postdate.html('*');
 
 
 		form
