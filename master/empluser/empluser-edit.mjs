@@ -54,7 +54,7 @@ export async function init(opt) {
 		OnDataDeleted: async (result, options) => { await form_deleted(result, options) },
 		OnIdSetup : (options) => { form_idsetup(options) },
 		OnViewModeChanged : (viewonly) => { form_viewmodechanged(viewonly) },
-		OnCreateRecordStatusCreated: () => { 
+		OnRecordStatusCreated: () => { 
 			$("#pnl_edit_record_custom").detach().appendTo("#pnl_edit_record");
 			$("#pnl_edit_record_custom").show();
 		}
@@ -127,25 +127,6 @@ export async function init(opt) {
 			}
 		}
 	})
-
-	// pnl_edit_record_custom
-	/*
-	// tambah info record
-	var postby = `
-	<div class="form_row">
-		<div class="form_label_col">Create By</div>
-		<div class="form_input_col" style="border: 0px solid black">
-			<span id="pnl_edit_record-postby"></span>
-		</div>
-	</div>	
-	`
-
-
-	var el = document.getElementById('pnl_edit_record_custom');
-	el.innerHTML = postby;
-	console.log('add');	
-	*/
-
 }
 
 
