@@ -5,10 +5,10 @@ if (!defined('FGTA4')) {
 }
 
 require_once __ROOT_DIR.'/core/sqlutil.php';
-
+require_once __ROOT_DIR . "/core/sequencer.php";
 
 use \FGTA4\exceptions\WebException;
-
+use \FGTA4\utils\Sequencer;
 
 
 class DataSave extends WebAPI {
@@ -78,6 +78,8 @@ class DataSave extends WebAPI {
 			$obj->edu_id = strtoupper($obj->edu_id);
 			$obj->religion_id = strtoupper($obj->religion_id);
 
+
+			//unset($obj->empl_dtexit);
 
 			// if ($obj->empl_dtexit=='--NULL--') { unset($obj->empl_dtexit); }
 			// if ($obj->empl_birthdate=='--NULL--') { unset($obj->empl_birthdate); }
@@ -166,7 +168,16 @@ class DataSave extends WebAPI {
 	}
 
 	public function NewId($param) {
-		return uniqid();
+		$seqname = 'FE';
+		$dt = new \DateTime();	
+		$ye = $dt->format("y");
+		$mo = $dt->format("m");
+		$seq = new Sequencer($this->db, 'seq_generalmonthly', $seqname, ['ye', 'mo']);
+		$raw = $seq->getraw(['ye'=>$ye, 'mo'=>'00']);
+		$id = $seqname . $raw['ye'] . \str_pad($raw['lastnum'], 4, '0', STR_PAD_LEFT);
+		return $id;
+
+		//return uniqid();
 	}
 
 }

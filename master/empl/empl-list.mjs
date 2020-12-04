@@ -1,11 +1,15 @@
 var this_page_id;
 
+import {fgta4slideselect} from  '../../../../../index.php/asset/fgta/framework/fgta4libs/fgta4slideselect.mjs'
+
+
 const tbl_list = $('#pnl_list-tbl_list')
 
 const txt_search = $('#pnl_list-txt_search')
 const btn_load = $('#pnl_list-btn_load')
 const btn_new = $('#pnl_list-btn_new')
 
+const txt_search_dept_id = $('#pnl_list-txt_search_dept_id');
 
 let grd_list = {}
 
@@ -22,6 +26,35 @@ export async function init(opt) {
 		OnRowRender: (tr) => { grd_list_rowrender(tr) }
 	})
 
+
+	new fgta4slideselect(txt_search_dept_id, {
+		title: 'Pilih dept_id',
+		returnpage: this_page_id,
+		api: $ui.apis.load_dept_id,
+		fieldValue: 'dept_id',
+		fieldValueMap: 'dept_id',
+		fieldDisplay: 'dept_name',
+		fields: [
+			{mapping: 'dept_id', text: 'dept_id'},
+			{mapping: 'dept_name', text: 'dept_name'},
+		],
+		OnDataLoading: (criteria) => {
+			console.log('loading...')
+		},
+		OnDataLoaded : (result, options) => {
+			result.records.unshift({dept_id:'--NULL--', dept_name:'NONE'});		
+		},
+		OnSelected: (value, display, record) => {
+			console.log(record);
+		},
+		OnCreated: () => {
+			txt_search_dept_id.combo('setValue', '--NULL--');
+			txt_search_dept_id.combo('setText', 'NONE');
+		}
+	});
+	
+	
+	
 
 	txt_search.textbox('textbox').bind('keypress', (evt)=>{
 		if (evt.key==='Enter') {
@@ -42,6 +75,13 @@ export async function init(opt) {
 		OnSizeRecalculated(ev.detail.width, ev.detail.height)
 	})	
 
+	document.addEventListener('scroll', (ev) => {
+		if ($ui.getPages().getCurrentPage()==this_page_id) {
+			if($(window).scrollTop() + $(window).height() == $(document).height()) {
+				grd_list.nextpageload();
+			}			
+		}
+	});
 
 	btn_load_click()
 }
@@ -76,6 +116,7 @@ export function scrolllast() {
 function btn_load_click() {
 
 	grd_list.clear()
+
 
 	var fn_listloading = async (options) => {
 		var search = txt_search.textbox('getText')

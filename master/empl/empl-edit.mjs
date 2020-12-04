@@ -37,6 +37,8 @@ const obj = {
 	cbo_religion_id: $('#pnl_edit-cbo_religion_id')
 }
 
+const dt_empl_dtexit_container = $('#pnl_edit-dt_empl_dtexit-container')
+
 
 let form = {}
 
@@ -227,6 +229,10 @@ export async function init(opt) {
 				
 
 
+	obj.chk_empl_isdisabled.checkbox({
+		onChange: (checked) => { chk_empl_isdisabled_onchange(checked); }
+	})
+
 
 	document.addEventListener('keydown', (ev)=>{
 		if ($ui.getPages().getCurrentPage()==this_page_id) {
@@ -296,6 +302,15 @@ export function open(data, rowid, viewmode=true, fn_callback) {
 		if (result.record.auth_id==null) { result.record.auth_id='--NULL--'; result.record.auth_name='NONE'; }
 
 
+		
+		
+		if (result.record.empl_isdisabled==1) {
+			dt_empl_dtexit_container.css('display', 'block');
+		} else {
+			dt_empl_dtexit_container.css('display', 'none');
+		}
+
+
 		form
 			.fill(result.record)
 			.setValue(obj.cbo_hrjob_id, result.record.hrjob_id, result.record.hrjob_name)
@@ -346,30 +361,32 @@ export function createnew() {
 		form.rowid = null
 
 		// set nilai-nilai default untuk form
-			data.empl_dtjoin = global.now()
-			data.empl_dtexit = global.now()
-			data.empl_birthdate = global.now()
+		data.empl_dtjoin = global.now()
+		data.empl_dtexit = global.now()
+		data.empl_birthdate = global.now()
 
-			data.hrjob_id = '0'
-			data.hrjob_name = '-- PILIH --'
-			data.hrstatus_id = '0'
-			data.hrstatus_name = '-- PILIH --'
-			data.dept_id = '0'
-			data.dept_name = '-- PILIH --'
-			data.site_id = '0'
-			data.site_name = '-- PILIH --'
-			data.auth_id = '--NULL--'
-			data.auth_name = 'NONE'
-			data.marital_id = '0'
-			data.marital_name = '-- PILIH --'
-			data.gender_id = '0'
-			data.gender_name = '-- PILIH --'
-			data.edu_id = '0'
-			data.edu_name = '-- PILIH --'
-			data.religion_id = '0'
-			data.religion_name = '-- PILIH --'
+		data.hrjob_id = '0'
+		data.hrjob_name = '-- PILIH --'
+		data.hrstatus_id = '0'
+		data.hrstatus_name = '-- PILIH --'
+		data.dept_id = '0'
+		data.dept_name = '-- PILIH --'
+		data.site_id = '0'
+		data.site_name = '-- PILIH --'
+		data.auth_id = '--NULL--'
+		data.auth_name = 'NONE'
+		data.marital_id = '0'
+		data.marital_name = '-- PILIH --'
+		data.gender_id = '0'
+		data.gender_name = '-- PILIH --'
+		data.edu_id = '0'
+		data.edu_name = '-- PILIH --'
+		data.religion_id = '0'
+		data.religion_name = '-- PILIH --'
 
 
+
+		dt_empl_dtexit_container.css('display', 'none');
 
 		options.OnCanceled = () => {
 			$ui.getPages().show('pnl_list')
@@ -430,8 +447,23 @@ async function form_datasaving(data, options) {
 	// apabila belum sesuai dengan yang diharuskan, batalkan penyimpanan
 	//    options.cancel = true
 
-	// Modifikasi object data, apabila ingin menambahkan variabel yang akan dikirim ke server
 
+	if (data.empl_isdisabled) {
+		var strDtJoin = data.empl_dtjoin.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+		var strDtExit = data.empl_dtexit.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+		
+		var dtJoin = new Date(strDtJoin[3], strDtJoin[2]-1, strDtJoin[1]);
+		var dtExit = new Date(strDtExit[3], strDtExit[2]-1, strDtExit[1]);
+	
+		if (dtExit.getTime() <= dtJoin.getTime()) {
+			$ui.ShowMessage('[WARNING]Tanggal Exit tidak bisa sama atau kurang dari tanggal join');
+			options.cancel = true;
+		}
+	}
+
+
+
+	// Modifikasi object data, apabila ingin menambahkan variabel yang akan dikirim ke server
 	options.skipmappingresponse = ["auth_id"];
 
 }
@@ -477,3 +509,12 @@ async function form_deleted(result, options) {
 
 }
 
+
+
+function chk_empl_isdisabled_onchange(checked) {
+	if (checked) {
+		dt_empl_dtexit_container.css('display', 'block');
+	} else {
+		dt_empl_dtexit_container.css('display', 'none');
+	}
+}
