@@ -70,7 +70,7 @@ class DataSave extends WebAPI {
 
 			try {
 
-				$action = 'assign user _id';
+				$action = 'assign user_id';
 				// if ($datastate=='NEW') {
 				// 	$action = 'NEW';
 				// 	if ($autoid) {
@@ -89,11 +89,14 @@ class DataSave extends WebAPI {
 	
 				$sql = "
 					INSERT INTO mst_empluser 
-					(empl_id, user_id, _createby, _createdate) 
-					VALUES (:empl_id, :user_id, :_createby, :_createdate) 
+					(empl_id, user_id, empluser_allowviewalldept, empluser_allowviewallunit, empluser_allowviewallsite, _createby, _createdate) 
+					VALUES (:empl_id, :user_id, :empluser_allowviewalldept, :empluser_allowviewallunit, :empluser_allowviewallsite, :_createby, :_createdate) 
 					ON DUPLICATE KEY 
 						UPDATE 
 						user_id = :user_id,
+						empluser_allowviewalldept = :empluser_allowviewalldept,
+						empluser_allowviewallunit = :empluser_allowviewallunit,
+						empluser_allowviewallsite = :empluser_allowviewallsite,
 						_modifyby = :_modifyby,
 						_modifydate = :_modifydate 
 				";	
@@ -102,6 +105,9 @@ class DataSave extends WebAPI {
 				$stmt->execute([
 					':empl_id' => $obj->empl_id,
 					':user_id' => $obj->user_id,
+					':empluser_allowviewalldept' => $this->getCheckStatus($obj->empluser_allowviewalldept),
+					':empluser_allowviewallunit' => $this->getCheckStatus($obj->empluser_allowviewallunit),
+					':empluser_allowviewallsite' => $this->getCheckStatus($obj->empluser_allowviewallsite),
 					':_createby' =>  $userdata->username,
 					':_createdate' => date("Y-m-d H:i:s"),
 					':_modifyby' =>  $userdata->username,
@@ -126,7 +132,11 @@ class DataSave extends WebAPI {
 
 			$sql = "
 				select 
-				A.empl_id, A.empl_nik, A.empl_name, C.dept_name, D.site_name, B.user_id, A._createby, A._createdate, A._modifyby, A._modifydate 
+				A.empl_id, A.empl_nik, A.empl_name, 
+				B.empluser_allowviewalldept,
+				B.empluser_allowviewallunit,
+				B.empluser_allowviewallsite,				
+				C.dept_name, D.site_name, B.user_id, A._createby, A._createdate, A._modifyby, A._modifydate 
 				from mst_empl A left join mst_empluser B on B.empl_id=A.empl_id
 								left join mst_dept C on C.dept_id = A.dept_id
 								left join mst_site D on D.site_id = A.site_id			
@@ -156,6 +166,15 @@ class DataSave extends WebAPI {
 
 	public function NewId($param) {
 		return uniqid();
+	}
+
+
+	public function getCheckStatus($value) {
+		if (is_bool($value)) {
+			return $value ? 1 : 0;		
+		} else {
+			return $value;
+		}
 	}
 
 }

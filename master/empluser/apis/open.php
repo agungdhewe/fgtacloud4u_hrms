@@ -50,7 +50,11 @@ class DataOpen extends WebAPI {
 			// ], $where->sql);
 			$sql = "
 				select 
-				A.empl_id, A.empl_nik, A.empl_name, C.dept_name, D.site_name, B.user_id, B._createby, B._createdate, B._modifyby, B._modifydate 
+				A.empl_id, A.empl_nik, A.empl_name, 
+				B.empluser_allowviewalldept,
+				B.empluser_allowviewallunit,
+				B.empluser_allowviewallsite,
+				C.dept_name, D.site_name, B.user_id, B._createby, B._createdate, B._modifyby, B._modifydate 
 				from mst_empl A left join mst_empluser B on B.empl_id=A.empl_id
 								left join mst_dept C on C.dept_id = A.dept_id
 								left join mst_site D on D.site_id = A.site_id			

@@ -15,6 +15,9 @@ const obj = {
 	txt_dept_name: $('#pnl_edit-txt_dept_name'),
 	txt_site_name: $('#pnl_edit-txt_site_name'),
 	cbo_user_id: $('#pnl_edit-cbo_user_id'),
+	chk_empluser_allowviewalldept: $('#pnl_edit-chk_empluser_allowviewalldept'),
+	chk_empluser_allowviewallunit: $('#pnl_edit-chk_empluser_allowviewallunit'),
+	chk_empluser_allowviewallsite: $('#pnl_edit-chk_empluser_allowviewallsite'),
 }
 
 const rec_postby = $('#pnl_edit_record-postby');
